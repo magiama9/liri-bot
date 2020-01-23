@@ -51,10 +51,10 @@ function searchSpotify(str) {
 function searchConcert(str) {
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
+  // STR SHOULD BE THE ARTIST NAME
   axios
     .get(
-      "https://rest.bandsintown.com/artists/celine+dion/events?app_id=codingbootcamp" +
-        str
+      `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp`
     )
     .then(function(response) {
       console.log(response);
