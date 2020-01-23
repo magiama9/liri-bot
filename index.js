@@ -38,7 +38,7 @@ function searchSpotify(str) {
   // SPOTIFY API CALL
   // USES HIDDEN KEYS IN .ENV
   axios
-    .get("https://api.github.com/users/" + str)
+    .get("https://api.spotify.com/v1/search" + str)
     .then(function(response) {
       console.log(response);
     })
@@ -65,6 +65,7 @@ function searchConcert(str) {
 
 function searchMovie(str) {
   // OMDB API CALL
+  // PERSONAL API KEY
   axios
     .get("http://www.omdbapi.com/?apikey=cdcc844a&t=" + str)
     .then(function(response) {
