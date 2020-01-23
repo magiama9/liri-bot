@@ -33,24 +33,26 @@ inquirer
   ])
   .then(response => {
     // SET RESPONSES FOR MANIPULATION
-    console.log(response);
+    // console.log(response);
     searchParam = response.searchParam;
     userSearch = response.userSearch;
   })
   .then(() => {
     // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
+    let noPunc = stripPunctuation(userSearch);
+    let noSpaces = replaceSpaces(noPunc);
     switch (searchParam) {
       case "Movie":
-        searchMovie(userSearch);
+        searchMovie(noPunc);
         break;
       case "Song or Artist":
-        searchSpotify(userSearch);
+        searchSpotify(noSpaces);
         break;
       case "Concert":
-        searchConcert(userSearch);
+        searchConcert(noPunc);
         break;
       // case "Random":
-      //   searchRandom(userSearch);
+      //   searchRandom(noPunc);
       //   break;
       default:
         console.log("Please select a category to search.");
@@ -61,7 +63,11 @@ function searchSpotify(str) {
   // SPOTIFY API CALL
   // USES HIDDEN KEYS IN .ENV
   axios
-    .get("https://api.spotify.com/v1/search" + str)
+    .get(`https://api.spotify.com/v1/search&q=${str}`, {
+      headers: {
+        Basic
+      }
+    })
     .then(function(response) {
       console.log(response);
     })
@@ -109,3 +115,42 @@ function searchMovie(str) {
 //       console.log(error);
 //     });
 // }
+
+let stripPunctuation = str => {
+  let punctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
+
+  return str.replace(punctuation, "");
+};
+
+let replaceSpaces = str => {
+  let spaces = /[ ]/g;
+  return str.replace(spaces, "+");
+};
+let getSpotifyToken = () => {
+  axios
+    .post("https://accounts.spotify.com/api/token/", {
+      headers: {
+        Authorization: `Basic ${process.env.SPOTIFY_ID}:${process.env.SPOTIFY_SECRET}`
+      },
+      data: {
+        grant_type: "client_credentials"
+      }
+    })
+    .then(response => console.log(response))
+    .catch(error => console.log(error));
+};
+
+let getSpotifyToken2 = () => {
+  axios({
+    method: "post",
+    url: "https://accounts.spotify.com/api/token/",
+    headers: {
+      Authorization: `Basic ${process.env.SPOTIFY_ID}:${process.env.SPOTIFY_SECRET}`
+    },
+    data: {
+      grant_type: "client_credentials"
+    }
+  })
+    .then(response => console.log(response))
+    .catch(error => console.log(error));
+};
