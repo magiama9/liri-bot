@@ -1,0 +1,25 @@
+{
+  "name": "liri-bot",
+  "version": "1.0.0",
+  "description": "Language Interpretation and Recognition Interface accessed with CLI to search Spotify, OMDB, and Bands in Town.",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "moment": "^2.24.0",
+    "node-spotify-api": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001b[\u001b[3~\u001b[3~\u001b[C\u001b[C\u001b["
+  },
+  "keywords": [
+    "language"
+  ],
+  "author": "Sam Randels",
+  "license": "MIT"
+}
