@@ -12,12 +12,15 @@ const dotenv = require("dotenv").config();
 const keys = require("./keys");
 const spotify = new Spotify(keys.spotify);
 
+let searchParam;
+let userSearch;
+
 inquirer
   .prompt([
     {
       // LIST OF CHOICES FOR SEARCH PARAMETERS
       type: "list",
-      message: "What would you like to search for?",
+      message: "What category would you like to search?",
       name: "searchParam",
       choices: ["Movie", "Song or Artist", "Concert", "Random"]
     },
@@ -28,11 +31,30 @@ inquirer
       name: "userSearch"
     }
   ])
-  .then(function(response) {
+  .then(response => {
     // SET RESPONSES FOR MANIPULATION
     console.log(response);
-    let searchParam = response.searchParam;
-    let userSearch = response.userSearch;
+    searchParam = response.searchParam;
+    userSearch = response.userSearch;
+  })
+  .then(() => {
+    // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
+    switch (searchParam) {
+      case "Movie":
+        searchMovie(userSearch);
+        break;
+      case "Song or Artist":
+        searchSpotify(userSearch);
+        break;
+      case "Concert":
+        searchConcert(userSearch);
+        break;
+      // case "Random":
+      //   searchRandom(userSearch);
+      //   break;
+      default:
+        console.log("Please select a category to search.");
+    }
   });
 
 function searchSpotify(str) {
@@ -68,7 +90,7 @@ function searchMovie(str) {
   // OMDB API CALL
   // PERSONAL API KEY
   axios
-    .get("http://www.omdbapi.com/?apikey=cdcc844a&t=" + str)
+    .get(`http://www.omdbapi.com/?apikey=cdcc844a&t=${str}`)
     .then(function(response) {
       console.log(response);
     })
@@ -77,13 +99,13 @@ function searchMovie(str) {
     });
 }
 
-function searchRandom(str) {
-  axios
-    .get("https://api.github.com/users/" + str)
-    .then(function(response) {
-      console.log(response);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-}
+// function searchRandom(str) {
+//   axios
+//     .get("https://api.github.com/users/" + str)
+//     .then(function(response) {
+//       console.log(response);
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// }
