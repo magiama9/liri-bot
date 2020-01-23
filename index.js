@@ -35,6 +35,8 @@ inquirer
   });
 
 function searchSpotify(str) {
+  // SPOTIFY API CALL
+  // USES HIDDEN KEYS IN .ENV
   axios
     .get("https://api.github.com/users/" + str)
     .then(function(response) {
@@ -46,11 +48,13 @@ function searchSpotify(str) {
 }
 
 function searchConcert(str) {
-
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
   axios
-    .get("https://rest.bandsintown.com/artists/celine+dion/events?app_id=codingbootcamp" + str)
+    .get(
+      "https://rest.bandsintown.com/artists/celine+dion/events?app_id=codingbootcamp" +
+        str
+    )
     .then(function(response) {
       console.log(response);
     })
@@ -60,8 +64,9 @@ function searchConcert(str) {
 }
 
 function searchMovie(str) {
+  // OMDB API CALL
   axios
-    .get("https://api.github.com/users/" + str)
+    .get("http://www.omdbapi.com/?apikey=cdcc844a&t=" + str)
     .then(function(response) {
       console.log(response);
     })
