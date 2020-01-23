@@ -6,6 +6,7 @@
 const inquirer = require("inquirer");
 const axios = require("axios");
 const fs = require("fs");
+const Spotify = require("node-spotify-api");
 const moment = require("moment");
 const dotenv = require("dotenv").config();
 const keys = require("./keys");
