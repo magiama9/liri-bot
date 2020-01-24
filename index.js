@@ -90,7 +90,7 @@ function searchConcert(str) {
   let oneWeek = addDays(currentDay);
   axios
     .get(
-      `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp`
+      `https://rest.bandsintown.com/artists/${str}/events?${currentDay},${oneWeek}?app_id=codingbootcamp`
     )
     .then(function(response) {
       console.log(response);
@@ -146,3 +146,5 @@ const replaceSpaces = str => {
   let spaces = /[ ]/g;
   return str.replace(spaces, "+");
 };
+
+
