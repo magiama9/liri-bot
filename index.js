@@ -17,6 +17,8 @@ const spotify = new Spotify({
 
 let searchParam;
 let userSearch;
+let currentDay = moment().format("Y-MM-DD");
+let oneWeek;
 
 inquirer
   .prompt([
@@ -84,11 +86,10 @@ function searchConcert(str) {
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
   // STR SHOULD BE THE ARTIST NAME
-  let currentDay = moment().format("Y-MM-DD");
-  let oneWeek = addDays(currentDay);
+  oneWeek = addDays(currentDay);
   axios
     .get(
-      `https://rest.bandsintown.com/artists/${str}/?date=${currentDay}%2C${oneWeek}/events?app_id=codingbootcamp`
+      `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp&date=${currentDay}%2C${oneWeek}` //Returns concerts within the next week
     )
     .then(function(response) {
       console.log(response);
@@ -144,5 +145,3 @@ const replaceSpaces = str => {
   let spaces = /[ ]/g;
   return str.replace(spaces, "+");
 };
-
-
