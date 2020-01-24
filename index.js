@@ -25,7 +25,7 @@ inquirer
       type: "list",
       message: "What category would you like to search?",
       name: "searchParam",
-      choices: ["Movie", "Song", "Artist", "Concert", "Random"]
+      choices: ["Movie", "Song", "Concert", "Random"]
     },
     {
       // USER INPUT TO SEARCH
@@ -51,9 +51,9 @@ inquirer
       case "Song":
         searchTrack(noSpaces);
         break;
-      case "Artist":
-        searchArtist(noSpaces);
-        break;
+      // case "Artist":
+      //   searchArtist(noSpaces);
+      //   break;
       case "Concert":
         searchConcert(noPunc);
         break;
@@ -67,25 +67,29 @@ inquirer
 
 const searchTrack = str => {
   spotify
-    .search({ type: "track", query: str })
+    .search({ type: "track", query: str, limit: 1 })
     .then(response => {
-      console.log(response);
+      // console.log(response.tracks.items);
+      console.log(response.tracks.items[0].name);
+      console.log(response.tracks.items[0].external_urls.spotify);
+      console.log(response.tracks.items[0].album.name);
+      console.log(response.tracks.items[0].album.artists[0].name);
     })
     .catch(err => {
       console.error(err);
     });
 };
 
-const searchArtist = str => {
-  spotify
-    .search({ type: "artist", query: str })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(err => {
-      console.error(err);
-    });
-};
+// const searchArtist = str => {
+//   spotify
+//     .search({ type: "artist", query: str })
+//     .then(response => {
+//       console.log(response);
+//     })
+//     .catch(err => {
+//       console.error(err);
+//     });
+// };
 
 function searchConcert(str) {
   // BANDS IN TOWN API CALL
