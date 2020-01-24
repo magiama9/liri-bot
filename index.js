@@ -39,6 +39,8 @@ inquirer
     // console.log(response);
     searchParam = response.searchParam;
     userSearch = response.userSearch;
+    console.log(currentDay);
+    console.log(addDays(currentDay));
   })
   .then(() => {
     // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
@@ -80,21 +82,12 @@ const searchTrack = str => {
     });
 };
 
-// const searchArtist = str => {
-//   spotify
-//     .search({ type: "artist", query: str })
-//     .then(response => {
-//       console.log(response);
-//     })
-//     .catch(err => {
-//       console.error(err);
-//     });
-// };
-
 function searchConcert(str) {
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
   // STR SHOULD BE THE ARTIST NAME
+  let currentDay = moment().format("Y-MM-DD");
+  let oneWeek = addDays(currentDay);
   axios
     .get(
       `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp`
@@ -117,10 +110,10 @@ function searchMovie(str) {
       console.log(response.data.Year); // Release Year
       console.log(response.data.imdbRating); // IMDB rating
       console.log(response.data.Ratings[1].Value); // Rotten Tomatoes or Metacritic rating
-      console.log(response.data.Country) // Production Country
-      console.log(response.data.Language) // Movie Language
-      console.log(response.data.Plot) // Movie Plot
-      console.log(response.data.Actors) // Movie Actors
+      console.log(response.data.Country); // Production Country
+      console.log(response.data.Language); // Movie Language
+      console.log(response.data.Plot); // Movie Plot
+      console.log(response.data.Actors); // Movie Actors
     })
     .catch(function(error) {
       console.log(error);
@@ -138,13 +131,18 @@ function searchMovie(str) {
 //     });
 // }
 
-let stripPunctuation = str => {
+const addDays = str => {
+  let oneWeekMoment = moment(str).add(7, "d");
+  return moment(oneWeekMoment).format("Y-MM-DD");
+};
+
+const stripPunctuation = str => {
   let punctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 
   return str.replace(punctuation, "");
 };
 
-let replaceSpaces = str => {
+const replaceSpaces = str => {
   let spaces = /[ ]/g;
   return str.replace(spaces, "+");
 };
