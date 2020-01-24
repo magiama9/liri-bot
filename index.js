@@ -49,10 +49,10 @@ inquirer
         searchMovie(noPunc);
         break;
       case "Song":
-        searchSpotify(noSpaces);
+        searchTrack(noSpaces);
         break;
       case "Artist":
-        searchSpotify(noSpaces);
+        searchArtist(noSpaces);
         break;
       case "Concert":
         searchConcert(noPunc);
@@ -65,20 +65,27 @@ inquirer
     }
   });
 
-function searchSpotify(str) {
-  // SPOTIFY API CALL
-  // USES HIDDEN KEYS IN .ENV
-  axios
-    .get(`https://api.spotify.com/v1/search&q=${str}`, {
-      headers: {}
-    })
-    .then(function(response) {
+const searchTrack = str => {
+  spotify
+    .search({ type: "track", query: str })
+    .then(response => {
       console.log(response);
     })
-    .catch(function(error) {
-      console.log(error);
+    .catch(err => {
+      console.error(err);
     });
-}
+};
+
+const searchArtist = str => {
+  spotify
+    .search({ type: "artist", query: str })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
 
 function searchConcert(str) {
   // BANDS IN TOWN API CALL
