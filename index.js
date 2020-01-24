@@ -20,7 +20,15 @@ let searchParam; // Holds category that's searched
 let userSearch; // Holds search term
 let currentDay = moment().format("Y-MM-DD"); // Formats current date as YYYY-MM-DD
 let oneWeek; // Holds value for one week from current moment
+var commands;
 /************************************************/
+
+fs.readFile("./random.txt", "utf-8", (err, contents) => {
+  commands = contents.split(",");
+  if (err) {
+    console.error(err);
+  }
+});
 
 inquirer
   .prompt([
@@ -44,6 +52,7 @@ inquirer
     userSearch = response.userSearch;
   })
   .then(() => {
+    console.log(commands);
     // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
     let noPunc = stripPunctuation(userSearch);
     let noSpaces = replaceSpaces(noPunc);
@@ -57,9 +66,21 @@ inquirer
       case "Concert":
         searchConcert(noPunc);
         break;
-      // case "Random":
-      //   searchRandom(noPunc);
-      //   break;
+      case "Random":
+        userSearch = stripPunctuation(commands[1]);
+        searchParam = commands[0];
+        switch (searchParam) {
+          case "Movie":
+            searchMovie(userSearch);
+            break;
+          case "Song":
+            searchTrack(userSearch);
+            break;
+          case "Concert":
+            searchConcert(userSearch);
+            break;
+        }
+        break;
       default:
         console.log("Please select a category to search.");
     }
@@ -91,7 +112,9 @@ function searchConcert(str) {
     .then(function(response) {
       console.log(response.data[0].venue.name); // Venue Name
       console.log(response.data[0].venue.city); // Venue City
-      console.log(moment(response.data[0].datetime).format("MM-DD-Y [@] h:mm a")); // Time/Date of Event formatted using Moment.js
+      console.log(
+        moment(response.data[0].datetime).format("MM-DD-Y [@] h:mm a")
+      ); // Time/Date of Event formatted using Moment.js
     })
     .catch(function(error) {
       console.log(error);
@@ -134,12 +157,14 @@ const addDays = str => {
   return moment(oneWeekMoment).format("Y-MM-DD");
 };
 
+// Removes punctuation for movie and concert search
 const stripPunctuation = str => {
   let punctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 
   return str.replace(punctuation, "");
 };
 
+// Replaces spaces for Spotify API search
 const replaceSpaces = str => {
   let spaces = /[ ]/g;
   return str.replace(spaces, "+");
