@@ -10,7 +10,10 @@ const Spotify = require("node-spotify-api");
 const moment = require("moment");
 const dotenv = require("dotenv").config();
 const keys = require("./keys");
-const spotify = new Spotify(keys.spotify);
+const spotify = new Spotify({
+  id: process.env.SPOTIFY_ID,
+  secret: process.env.SPOTIFY_SECRET
+});
 
 let searchParam;
 let userSearch;
@@ -64,9 +67,7 @@ function searchSpotify(str) {
   // USES HIDDEN KEYS IN .ENV
   axios
     .get(`https://api.spotify.com/v1/search&q=${str}`, {
-      headers: {
-        Basic
-      }
+      headers: {}
     })
     .then(function(response) {
       console.log(response);
@@ -125,32 +126,4 @@ let stripPunctuation = str => {
 let replaceSpaces = str => {
   let spaces = /[ ]/g;
   return str.replace(spaces, "+");
-};
-let getSpotifyToken = () => {
-  axios
-    .post("https://accounts.spotify.com/api/token/", {
-      headers: {
-        Authorization: `Basic ${process.env.SPOTIFY_ID}:${process.env.SPOTIFY_SECRET}`
-      },
-      data: {
-        grant_type: "client_credentials"
-      }
-    })
-    .then(response => console.log(response))
-    .catch(error => console.log(error));
-};
-
-let getSpotifyToken2 = () => {
-  axios({
-    method: "post",
-    url: "https://accounts.spotify.com/api/token/",
-    headers: {
-      Authorization: `Basic ${process.env.SPOTIFY_ID}:${process.env.SPOTIFY_SECRET}`
-    },
-    data: {
-      grant_type: "client_credentials"
-    }
-  })
-    .then(response => console.log(response))
-    .catch(error => console.log(error));
 };
