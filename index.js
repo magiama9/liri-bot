@@ -25,7 +25,7 @@ inquirer
       type: "list",
       message: "What category would you like to search?",
       name: "searchParam",
-      choices: ["Movie", "Song or Artist", "Concert", "Random"]
+      choices: ["Movie", "Song", "Artist", "Concert", "Random"]
     },
     {
       // USER INPUT TO SEARCH
@@ -48,7 +48,10 @@ inquirer
       case "Movie":
         searchMovie(noPunc);
         break;
-      case "Song or Artist":
+      case "Song":
+        searchSpotify(noSpaces);
+        break;
+      case "Artist":
         searchSpotify(noSpaces);
         break;
       case "Concert":
