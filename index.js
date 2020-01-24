@@ -39,8 +39,6 @@ inquirer
     // console.log(response);
     searchParam = response.searchParam;
     userSearch = response.userSearch;
-    console.log(currentDay);
-    console.log(addDays(currentDay));
   })
   .then(() => {
     // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
@@ -90,7 +88,7 @@ function searchConcert(str) {
   let oneWeek = addDays(currentDay);
   axios
     .get(
-      `https://rest.bandsintown.com/artists/${str}/events?${currentDay},${oneWeek}?app_id=codingbootcamp`
+      `https://rest.bandsintown.com/artists/${str}/?date=${currentDay}%2C${oneWeek}/events?app_id=codingbootcamp`
     )
     .then(function(response) {
       console.log(response);
