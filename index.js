@@ -113,7 +113,14 @@ function searchMovie(str) {
   axios
     .get(`http://www.omdbapi.com/?apikey=cdcc844a&t=${str}`)
     .then(function(response) {
-      console.log(response);
+      console.log(response.data.Title); // Movie Title
+      console.log(response.data.Year); // Release Year
+      console.log(response.data.imdbRating); // IMDB rating
+      console.log(response.data.Ratings[1].Value); // Rotten Tomatoes or Metacritic rating
+      console.log(response.data.Country) // Production Country
+      console.log(response.data.Language) // Movie Language
+      console.log(response.data.Plot) // Movie Plot
+      console.log(response.data.Actors) // Movie Actors
     })
     .catch(function(error) {
       console.log(error);
