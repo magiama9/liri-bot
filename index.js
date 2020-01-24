@@ -14,11 +14,13 @@ const spotify = new Spotify({
   id: process.env.SPOTIFY_ID,
   secret: process.env.SPOTIFY_SECRET
 });
-
-let searchParam;
-let userSearch;
-let currentDay = moment().format("Y-MM-DD");
-let oneWeek;
+/************************************************/
+/*******GLOBAL VARIABLES*************************/
+let searchParam; // Holds category that's searched
+let userSearch; // Holds search term
+let currentDay = moment().format("Y-MM-DD"); // Formats current date as YYYY-MM-DD
+let oneWeek; // Holds value for one week from current moment
+/************************************************/
 
 inquirer
   .prompt([
@@ -38,7 +40,6 @@ inquirer
   ])
   .then(response => {
     // SET RESPONSES FOR MANIPULATION
-    // console.log(response);
     searchParam = response.searchParam;
     userSearch = response.userSearch;
   })
@@ -53,9 +54,6 @@ inquirer
       case "Song":
         searchTrack(noSpaces);
         break;
-      // case "Artist":
-      //   searchArtist(noSpaces);
-      //   break;
       case "Concert":
         searchConcert(noPunc);
         break;
@@ -71,11 +69,10 @@ const searchTrack = str => {
   spotify
     .search({ type: "track", query: str, limit: 1 })
     .then(response => {
-      // console.log(response.tracks.items);
-      console.log(response.tracks.items[0].name);
-      console.log(response.tracks.items[0].external_urls.spotify);
-      console.log(response.tracks.items[0].album.name);
-      console.log(response.tracks.items[0].album.artists[0].name);
+      console.log(response.tracks.items[0].name); // Song Name
+      console.log(response.tracks.items[0].external_urls.spotify); // Spotify URL
+      console.log(response.tracks.items[0].album.name); // Album Name
+      console.log(response.tracks.items[0].album.artists[0].name); // Artist Name
     })
     .catch(err => {
       console.error(err);
@@ -92,7 +89,9 @@ function searchConcert(str) {
       `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp&date=${currentDay}%2C${oneWeek}` //Returns concerts within the next week
     )
     .then(function(response) {
-      console.log(response);
+      console.log(response.data[0].venue.name); // Venue Name
+      console.log(response.data[0].venue.city); // Venue City
+      console.log(moment(response.data[0].datetime).format("MM-DD-Y [@] h:mm a")); // Time/Date of Event formatted using Moment.js
     })
     .catch(function(error) {
       console.log(error);
