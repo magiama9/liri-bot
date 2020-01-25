@@ -58,13 +58,19 @@ inquirer
     let noSpaces = replaceSpaces(noPunc);
     switch (searchParam) {
       case "Movie":
-        searchMovie(noPunc);
+        if (noPunc != "") {
+          searchMovie(noPunc);
+        } else searchMovie("Mr. Nobody"); // Default Search if no input
         break;
       case "Song":
-        searchTrack(noSpaces);
+        if (noSpaces != "") {
+          searchTrack(noSpaces);
+        } else searchTrack("The Sign"); // Default search if no input
         break;
       case "Concert":
-        searchConcert(noPunc);
+        if (noPunc != "") {
+          searchConcert(noPunc);
+        } else searchConcert("Celine Dion"); // Default Search if no input
         break;
       case "Random":
         // Search parameters are pulled from "./random.txt"
@@ -90,19 +96,21 @@ inquirer
 const searchTrack = str => {
   // SPOTIFY API SEARCH USING NODE SPOTIFY API WRAPPER
   spotify
-    .search({ type: "track", query: str, limit: 1 })
+    .search({ type: "track", query: str, limit: 1 }) // Limits search result to 1 for easier data handling
     .then(response => {
-      console.log(response.tracks.items[0].name); // Song Name
-      console.log(response.tracks.items[0].external_urls.spotify); // Spotify URL
-      console.log(response.tracks.items[0].album.name); // Album Name
-      console.log(response.tracks.items[0].album.artists[0].name); // Artist Name
+      console.log(`Song: ${response.tracks.items[0].name}`); // Song Name
+      console.log(`Album: ${response.tracks.items[0].album.name}`); // Album Name
+      console.log(`Artist: ${response.tracks.items[0].album.artists[0].name}`); // Artist Name
+      console.log(
+        `Spotify Link: ${response.tracks.items[0].external_urls.spotify}`
+      ); // Spotify URL
     })
     .catch(err => {
       console.error(err);
     });
 };
 
-function searchConcert(str) {
+const searchConcert = str => {
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
   // STR SHOULD BE THE ARTIST NAME
@@ -112,36 +120,38 @@ function searchConcert(str) {
       `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp&date=${currentDay}%2C${oneWeek}` //Returns concerts within the next week
     )
     .then(function(response) {
-      console.log(response.data[0].venue.name); // Venue Name
-      console.log(response.data[0].venue.city); // Venue City
       console.log(
-        moment(response.data[0].datetime).format("MM-DD-Y [@] h:mm a")
-      ); //Time/Date of Event formatted using Moment.js
+        `${response.data[0].artist.name} will be playing at ${
+          response.data[0].venue.name
+        } in ${response.data[0].venue.city} on ${moment(
+          response.data[0].datetime
+        ).format("MM-DD-Y [@] h:mm a")}`
+      ); // ${ARTIST NAME} will be playing ${VENUE NAME} in $(VENUE CITY) at ${EVENT TIME}
     })
     .catch(function(error) {
       console.log(error);
     });
-}
+};
 
-function searchMovie(str) {
+const searchMovie = str => {
   // OMDB API CALL
   // PERSONAL API KEY
   axios
     .get(`http://www.omdbapi.com/?apikey=cdcc844a&t=${str}`)
     .then(function(response) {
-      console.log(response.data.Title); // Movie Title
-      console.log(response.data.Year); // Release Year
-      console.log(response.data.imdbRating); // IMDB rating
-      console.log(response.data.Ratings[1].Value); // Rotten Tomatoes or Metacritic rating
-      console.log(response.data.Country); // Production Country
-      console.log(response.data.Language); // Movie Language
-      console.log(response.data.Plot); // Movie Plot
-      console.log(response.data.Actors); // Movie Actors
+      console.log(`Title: ${response.data.Title}`); // Movie Title
+      console.log(`Year: ${response.data.Year}`); // Release Year
+      console.log(`IMDB Rating: ${response.data.imdbRating}`); // IMDB rating
+      console.log(`RT Rating: ${response.data.Ratings[1].Value}`); // Rotten Tomatoes Rating (N.B. IF ROTTEN TOMATOES DATA IS NOT RETURNED, THIS IS USUALLY A METACRITIC SCORE)
+      console.log(`Country: ${response.data.Country}`); // Production Country
+      console.log(`Language: ${response.data.Language}`); // Movie Language
+      console.log(`Actors: ${response.data.Actors}`); // Movie Actors
+      console.log(`Plot Summary: ${response.data.Plot}`); // Movie Plot
     })
     .catch(function(error) {
       console.log(error);
     });
-}
+};
 
 // Adds one week to the current day
 // Used to limit concert search results to a manageable number
