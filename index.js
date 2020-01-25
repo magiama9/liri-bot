@@ -119,7 +119,7 @@ const searchConcert = str => {
     .get(
       `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp&date=${currentDay}%2C${oneWeek}` //Returns concerts within the next week
     )
-    .then(function(response) {
+    .then(response => {
       console.log(
         `${response.data[0].artist.name} will be playing at ${
           response.data[0].venue.name
@@ -128,8 +128,8 @@ const searchConcert = str => {
         ).format("MM-DD-Y [@] h:mm a")}`
       ); // ${ARTIST NAME} will be playing ${VENUE NAME} in $(VENUE CITY) at ${EVENT TIME}
     })
-    .catch(function(error) {
-      console.log(error);
+    .catch(error => {
+      console.error(error);
     });
 };
 
@@ -137,8 +137,8 @@ const searchMovie = str => {
   // OMDB API CALL
   // PERSONAL API KEY
   axios
-    .get(`http://www.omdbapi.com/?apikey=cdcc844a&t=${str}`)
-    .then(function(response) {
+    .get(`http://www.omdbapi.com/?apikey=${process.env.OMDB_apikey}&t=${str}`)
+    .then(response => {
       console.log(`Title: ${response.data.Title}`); // Movie Title
       console.log(`Year: ${response.data.Year}`); // Release Year
       console.log(`IMDB Rating: ${response.data.imdbRating}`); // IMDB rating
@@ -148,8 +148,8 @@ const searchMovie = str => {
       console.log(`Actors: ${response.data.Actors}`); // Movie Actors
       console.log(`Plot Summary: ${response.data.Plot}`); // Movie Plot
     })
-    .catch(function(error) {
-      console.log(error);
+    .catch(error => {
+      console.error(error);
     });
 };
 
