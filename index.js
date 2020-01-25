@@ -20,9 +20,10 @@ let searchParam; // Holds category that's searched
 let userSearch; // Holds search term
 let currentDay = moment().format("Y-MM-DD"); // Formats current date as YYYY-MM-DD
 let oneWeek; // Holds value for one week from current moment
-var commands;
+var commands; // Holds commands read from "./random.txt"
 /************************************************/
 
+// Reads random.txt and extracts the commands. Must be in format -- Category,"Search Term"
 fs.readFile("./random.txt", "utf-8", (err, contents) => {
   commands = contents.split(",");
   if (err) {
@@ -42,7 +43,7 @@ inquirer
     {
       // USER INPUT TO SEARCH
       type: "input",
-      message: "What would you like to search for?",
+      message: "What term you like to search for?",
       name: "userSearch"
     }
   ])
@@ -52,7 +53,6 @@ inquirer
     userSearch = response.userSearch;
   })
   .then(() => {
-    console.log(commands);
     // DECIDES WHICH CALL TO RUN BASED ON USER DECISION
     let noPunc = stripPunctuation(userSearch);
     let noSpaces = replaceSpaces(noPunc);
@@ -67,6 +67,7 @@ inquirer
         searchConcert(noPunc);
         break;
       case "Random":
+        // Search parameters are pulled from "./random.txt"
         userSearch = stripPunctuation(commands[1]);
         searchParam = commands[0];
         switch (searchParam) {
@@ -87,6 +88,7 @@ inquirer
   });
 
 const searchTrack = str => {
+  // SPOTIFY API SEARCH USING NODE SPOTIFY API WRAPPER
   spotify
     .search({ type: "track", query: str, limit: 1 })
     .then(response => {
@@ -114,7 +116,7 @@ function searchConcert(str) {
       console.log(response.data[0].venue.city); // Venue City
       console.log(
         moment(response.data[0].datetime).format("MM-DD-Y [@] h:mm a")
-      ); // Time/Date of Event formatted using Moment.js
+      ); //Time/Date of Event formatted using Moment.js
     })
     .catch(function(error) {
       console.log(error);
@@ -141,17 +143,8 @@ function searchMovie(str) {
     });
 }
 
-// function searchRandom(str) {
-//   axios
-//     .get("https://api.github.com/users/" + str)
-//     .then(function(response) {
-//       console.log(response);
-//     })
-//     .catch(function(error) {
-//       console.log(error);
-//     });
-// }
-
+// Adds one week to the current day
+// Used to limit concert search results to a manageable number
 const addDays = str => {
   let oneWeekMoment = moment(str).add(7, "d");
   return moment(oneWeekMoment).format("Y-MM-DD");
