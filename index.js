@@ -93,64 +93,64 @@ inquirer
     }
   });
 
-const searchTrack = str => {
+const searchTrack = async str => {
   // SPOTIFY API SEARCH USING NODE SPOTIFY API WRAPPER
-  spotify
-    .search({ type: "track", query: str, limit: 1 }) // Limits search result to 1 for easier data handling
-    .then(response => {
-      console.log(`Song: ${response.tracks.items[0].name}`); // Song Name
-      console.log(`Album: ${response.tracks.items[0].album.name}`); // Album Name
-      console.log(`Artist: ${response.tracks.items[0].album.artists[0].name}`); // Artist Name
-      console.log(
-        `Spotify Link: ${response.tracks.items[0].external_urls.spotify}`
-      ); // Spotify URL
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  try {
+    let response = await spotify.search({
+      type: "track",
+      query: str,
+      limit: 1
+    }); // Limits search result to 1 for easier data handling
+    console.log(`Song: ${response.tracks.items[0].name}`); // Song Name
+    console.log(`Album: ${response.tracks.items[0].album.name}`); // Album Name
+    console.log(`Artist: ${response.tracks.items[0].album.artists[0].name}`); // Artist Name
+    console.log(
+      `Spotify Link: ${response.tracks.items[0].external_urls.spotify}`
+    ); //Spotify URL
+  } catch (err) {
+    console.error("There was an error calling to the Spotify API.");
+  }
 };
 
-const searchConcert = str => {
+const searchConcert = async str => {
   // BANDS IN TOWN API CALL
   // UTILIZES CODING BOOTCAMP APP_ID
   // STR SHOULD BE THE ARTIST NAME
   oneWeek = addDays(currentDay);
-  axios
-    .get(
+  try {
+    const response = await axios.get(
       `https://rest.bandsintown.com/artists/${str}/events?app_id=codingbootcamp&date=${currentDay}%2C${oneWeek}` //Returns concerts within the next week
-    )
-    .then(response => {
-      console.log(
-        `${response.data[0].artist.name} will be playing at ${
-          response.data[0].venue.name
-        } in ${response.data[0].venue.city} on ${moment(
-          response.data[0].datetime
-        ).format("MM-DD-Y [@] h:mm a")}`
-      ); // ${ARTIST NAME} will be playing ${VENUE NAME} in $(VENUE CITY) at ${EVENT TIME}
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    );
+    console.log(
+      `${response.data[0].artist.name} will be playing at ${
+        response.data[0].venue.name
+      } in ${response.data[0].venue.city} on ${moment(
+        response.data[0].datetime
+      ).format("MM-DD-Y [@] h:mm a")}`
+    ); // ${ARTIST NAME} will be playing ${VENUE NAME} in $(VENUE CITY) at ${EVENT TIME}
+  } catch (err) {
+    console.error("There was an error calling to the Bands in Town API");
+  }
 };
 
-const searchMovie = str => {
+const searchMovie = async str => {
   // OMDB API CALL
   // PERSONAL API KEY
-  axios
-    .get(`http://www.omdbapi.com/?apikey=${process.env.OMDB_apikey}&t=${str}`)
-    .then(response => {
-      console.log(`Title: ${response.data.Title}`); // Movie Title
-      console.log(`Year: ${response.data.Year}`); // Release Year
-      console.log(`IMDB Rating: ${response.data.imdbRating}`); // IMDB rating
-      console.log(`RT Rating: ${response.data.Ratings[1].Value}`); // Rotten Tomatoes Rating (N.B. IF ROTTEN TOMATOES DATA IS NOT RETURNED, THIS IS USUALLY A METACRITIC SCORE)
-      console.log(`Country: ${response.data.Country}`); // Production Country
-      console.log(`Language: ${response.data.Language}`); // Movie Language
-      console.log(`Actors: ${response.data.Actors}`); // Movie Actors
-      console.log(`Plot Summary: ${response.data.Plot}`); // Movie Plot
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  try {
+    const response = await axios.get(
+      `http://www.omdbapi.com/?apikey=${process.env.OMDB_apikey}&t=${str}`
+    );
+    console.log(`Title: ${response.data.Title}`); // Movie Title
+    console.log(`Year: ${response.data.Year}`); // Release Year
+    console.log(`IMDB Rating: ${response.data.imdbRating}`); // IMDB rating
+    console.log(`RT Rating: ${response.data.Ratings[1].Value}`); // Rotten Tomatoes Rating (N.B. IF ROTTEN TOMATOES DATA IS NOT RETURNED, THIS IS USUALLY A METACRITIC SCORE)
+    console.log(`Country: ${response.data.Country}`); // Production Country
+    console.log(`Language: ${response.data.Language}`); // Movie Language
+    console.log(`Actors: ${response.data.Actors}`); // Movie Actors
+    console.log(`Plot Summary: ${response.data.Plot}`); // Movie Plot
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // Adds one week to the current day
